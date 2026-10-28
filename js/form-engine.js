@@ -9,7 +9,8 @@
      [data-role="evidencias-title"]   título "Evidencias Fotográficas"
      [data-role="photo-input|photo-thumbs|photo-count|piezas-body"]
      [data-action="clear|pdf"]        botones
-     [data-role="status"]             texto de estado
+     [data-ui]                        envoltorios solo de interfaz (tarjetas, tablas);
+                                      se eliminan al armar el PDF
    ========================================================================= */
 (function(){
   'use strict';
@@ -113,9 +114,7 @@
       this.photos = [];
       this.photoSeq = 0;
       this.busy = false;
-      this.statusEl = root.querySelector('[data-role="status"]');
       this.pages = Array.from(root.querySelectorAll('.page[data-page]'));
-      this._decoratePages();
       this._bind();
       if(typeof cfg.onInit === 'function') cfg.onInit(root);
     }
@@ -135,20 +134,6 @@
       </div>`;
     }
 
-    // Membrete, recuadro de clave y pie se agregan por JS a cada página del editor
-    _decoratePages(){
-      const total = this.pages.length;
-      this.pages.forEach((page, idx) => {
-        const bg = document.createElement('img');
-        bg.className = 'page-bg';
-        bg.alt = '';
-        bg.src = window.ZX_MEMBRETE;
-        page.prepend(bg);
-        bg.insertAdjacentHTML('afterend', this.metaBoxHTML(idx + 1, total));
-        page.insertAdjacentHTML('beforeend', FOOTER_HTML);
-      });
-    }
-
     _bind(){
       const form = this.$('form');
       if(form) form.addEventListener('submit', e => e.preventDefault());
@@ -159,7 +144,15 @@
       if(pdfBtn) pdfBtn.addEventListener('click', () => this.downloadPDF());
 
       const input = this.$('[data-role="photo-input"]');
-      if(input) input.addEventListener('change', e => this._handleFiles(e));
+      if(input) input.addEventListener('change', e => { this._addFiles(e.target.files); e.target.value = ''; });
+
+      // Arrastrar y soltar fotos sobre la zona de evidencias
+      const drop = this.$('.photo-attach-box');
+      if(drop){
+        ['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('is-drag'); }));
+        ['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('is-drag'); }));
+        drop.addEventListener('drop', e => this._addFiles(e.dataTransfer && e.dataTransfer.files));
+      }
 
       const thumbs = this.$('[data-role="photo-thumbs"]');
       if(thumbs) thumbs.addEventListener('click', e => {
@@ -185,18 +178,18 @@
       });
     }
 
+    // Mensajes al usuario: usa el toast de la app si existe
     setStatus(text, clearAfterMs){
-      if(!this.statusEl) return;
-      this.statusEl.textContent = text;
-      clearTimeout(this._statusTimer);
-      if(clearAfterMs) this._statusTimer = setTimeout(() => { this.statusEl.textContent = ''; }, clearAfterMs);
+      if(window.ZXUI && window.ZXUI.toast) window.ZXUI.toast(text, clearAfterMs);
+      else if(text) console.log('[' + this.cfg.clave + '] ' + text);
     }
 
+    _changed(){ this.root.dispatchEvent(new CustomEvent('zx:change', { bubbles:true })); }
+
     // ---------- Fotos ----------
-    _handleFiles(evt){
-      const files = Array.from(evt.target.files || []);
+    _addFiles(fileList){
+      const files = Array.from(fileList || []).filter(f => f.type && f.type.startsWith('image/'));
       files.forEach(file => {
-        if(!file.type.startsWith('image/')) return;
         const reader = new FileReader();
         reader.onload = e => {
           this.photos.push({ id: this.photoSeq++, dataUrl: e.target.result });
@@ -204,7 +197,6 @@
         };
         reader.readAsDataURL(file);
       });
-      evt.target.value = '';
     }
 
     removePhoto(id){
@@ -217,17 +209,24 @@
       wrap.innerHTML = this.photos.map(p => `
         <div class="photo-thumb">
           <img src="${p.dataUrl}" alt="">
-          <button type="button" class="remove-btn" data-photo-id="${p.id}" title="Quitar foto">✕</button>
+          <button type="button" class="remove-btn" data-photo-id="${p.id}" aria-label="Quitar foto">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
         </div>`).join('');
       const countEl = this.$('[data-role="photo-count"]');
       countEl.textContent = this.photos.length
-        ? `${this.photos.length} foto(s) adjunta(s) — se acomodarán automáticamente al descargar el PDF (hasta ${PHOTOS_PER_PAGE} por página).`
+        ? `${this.photos.length} foto(s) adjunta(s) · en el PDF se acomodan hasta ${PHOTOS_PER_PAGE} por página`
         : '';
+      this._changed();
     }
 
     // ---------- Limpiar ----------
-    clear(){
-      if(!confirm(`¿Borrar todos los datos del formato ${this.cfg.clave}?`)) return;
+    async clear(){
+      const msg = `Se borrarán todos los datos capturados y las fotos del formato ${this.cfg.clave}.`;
+      const ok = (window.ZXUI && window.ZXUI.confirm)
+        ? await window.ZXUI.confirm({ title:'¿Limpiar formulario?', message: msg, confirmText:'Sí, limpiar' })
+        : confirm(msg);
+      if(!ok) return;
       this.$$('input[type=text], input[type=date]').forEach(i => i.value = '');
       this.$$('input[type=radio], input[type=checkbox]').forEach(i => i.checked = false);
       this.$$('textarea').forEach(t => t.value = '');
@@ -235,6 +234,7 @@
       this.photos = [];
       this.renderThumbs();
       this.setStatus('Formulario limpio', 2500);
+      this._changed();
     }
 
     // ---------- PDF ----------
@@ -245,8 +245,10 @@
     async downloadPDF(){
       if(this.busy) return;
       this.busy = true;
+      // Asegura que las fuentes del formato estén cargadas antes de medir
+      try{ if(document.fonts && document.fonts.load){ await Promise.all([document.fonts.load("300 12px 'Lab Grotesque'"), document.fonts.load("700 12px 'Lab Grotesque'")]); } }catch(e){}
       const pdfBtn = this.$('[data-action="pdf"]');
-      if(pdfBtn) pdfBtn.disabled = true;
+      if(pdfBtn){ pdfBtn.disabled = true; pdfBtn.classList.add('is-loading'); }
       this.setStatus('Generando PDF...');
       document.body.classList.add('capturing');
       await sleep(60);
@@ -353,6 +355,11 @@
         const clones = this.pages.map(p => {
           const c = cloneWithState(p);
           c.classList.add('pdf-render');
+          // Las tarjetas y contenedores de la interfaz (data-ui) no existen en el formato
+          // impreso: se reemplazan por su contenido para conservar la estructura original.
+          c.querySelectorAll('[data-ui]').forEach(w => w.replaceWith(...Array.from(w.childNodes)));
+          c.removeAttribute('id');
+          c.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
           c.querySelectorAll('.meta-box, .page-bg, .page-footer').forEach(n => n.remove());
           host.appendChild(c);
           expandTextFields(c);
@@ -455,7 +462,7 @@
         host.remove();
         document.body.classList.remove('capturing');
         window.scrollTo(prevScrollX, prevScrollY);
-        if(pdfBtn) pdfBtn.disabled = false;
+        if(pdfBtn){ pdfBtn.disabled = false; pdfBtn.classList.remove('is-loading'); }
         this.busy = false;
       }
     }

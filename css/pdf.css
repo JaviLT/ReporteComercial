@@ -1,0 +1,145 @@
+/* =========================================================================
+   Estilos del PDF (hoja carta 816 x 1056 px, formato oficial con membrete).
+   TODO está acotado a .pdf-render: solo aplica a las páginas que el motor arma
+   fuera de pantalla para generar el PDF. La interfaz de la app NO usa este archivo.
+   Colores fijos (no variables) para que el PDF salga igual en modo claro y oscuro.
+   ========================================================================= */
+@font-face{
+  font-family:'Lab Grotesque';
+  src:url('../assets/fonts/LabGrotesque-Light.otf') format('opentype');
+  font-weight:300; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Lab Grotesque';
+  src:url('../assets/fonts/LabGrotesque-Bold.otf') format('opentype');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+.pdf-render, .pdf-render *{box-sizing:border-box;-webkit-text-stroke-width:0px;-webkit-text-stroke-color:transparent;}
+.pdf-render b, .pdf-render strong{font-weight:700;}
+
+/* ---------- Página ---------- */
+.page.pdf-render{
+  width:816px;
+  min-height:1056px;
+  background-color:#fff;
+  position:relative;
+  margin:0 auto 26px;
+  padding:150px 40px 40px;
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
+  border:1px solid #e6e6e6;
+  color:#1A1A1A;
+  font-weight:300;
+}
+.pdf-render .page-bg{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  z-index:-1; object-fit:cover; display:block; pointer-events:none;
+}
+.pdf-render .page-footer{
+  position:absolute; bottom:14px; left:40px; right:40px;
+  text-align:center; font-size:8.5px; color:#666; line-height:1.4;
+  border-top:1px solid #ddd; padding-top:6px;
+  background:rgba(255,255,255,.88);
+}
+.pdf-render /* meta box sobre la esquina superior derecha del membrete */
+.meta-box{
+  position:absolute; top:44px; right:40px;
+  background:rgba(237,237,237,.94);
+  border:1px solid #ccc;
+  width:290px;
+  font-size:10.5px;
+  padding:8px 12px;
+}
+.pdf-render .meta-box .meta-title{font-weight:700; margin-bottom:4px;}
+.pdf-render .meta-box .meta-row{display:flex; justify-content:space-between; gap:6px;}
+.pdf-render .meta-box .meta-row b{font-weight:700;}
+.pdf-render .meta-box .page-num{font-weight:700; text-align:right; margin-top:2px;}
+.pdf-render .section-title{
+  background:#0D18A8; color:#fff; text-align:center;
+  font-size:13px; font-weight:700; letter-spacing:.3px;
+  padding:7px 6px; margin:16px 0 10px; border-radius:2px;
+}
+.pdf-render /* ---------- Campos ---------- */
+.row{display:flex; gap:22px; flex-wrap:wrap; margin-bottom:11px;}
+.pdf-render .field{flex:1 1 0; min-width:130px; display:flex; align-items:flex-end; gap:6px;}
+.pdf-render .field.full{flex-basis:100%;}
+.pdf-render .field label{font-size:11.5px; white-space:nowrap; color:#222; padding-bottom:2px;}
+.pdf-render .field input[type=text],
+.pdf-render .field input[type=date],
+.pdf-render .field input[type=number]{
+  flex:1; border:none; border-bottom:1px solid #9AA0AE; background:transparent;
+  font-size:12px; padding:2px 3px; font-family:inherit; color:#1A1A1A; min-width:40px;
+}
+.pdf-render .field input:focus{outline:none; border-bottom:1.5px solid #0D18A8;}
+.pdf-render .thermal-row{display:flex; gap:26px; flex-wrap:wrap; margin-bottom:11px; align-items:baseline;}
+.pdf-render .thermal-stage{display:flex; align-items:baseline; gap:4px; white-space:nowrap; font-size:11.5px; color:#222;}
+.pdf-render .thermal-stage input.mini{
+  width:34px; border:none; border-bottom:1px solid #9AA0AE; background:transparent;
+  font-size:12px; text-align:center; padding:1px 2px; font-family:inherit; color:#1A1A1A;
+}
+.pdf-render .thermal-stage input.mini:focus{outline:none; border-bottom:1.5px solid #0D18A8;}
+.pdf-render textarea{
+  width:100%; border:1.5px solid #0D18A8; border-radius:2px; background:#fff;
+  font-family:inherit; font-size:12px; padding:8px; resize:vertical; color:#1A1A1A;
+}
+.pdf-render textarea:focus{outline:none; border-color:#0D18A8;}
+.pdf-render .options-line{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+.pdf-render .options-line > .opt-label{font-size:11.5px; font-weight:700; margin-right:4px; white-space:nowrap;}
+.pdf-render .opt-group{display:flex; flex-wrap:wrap; gap:16px; row-gap:8px;}
+.pdf-render .opt-group > .opt-head{font-size:11.5px; font-weight:700;}
+.pdf-render .opt{display:flex; align-items:center; gap:5px; font-size:11.5px;}
+.pdf-render input[type=radio],
+.pdf-render input[type=checkbox]{
+  appearance:none; -webkit-appearance:none;
+  width:13px; height:13px; border:1.6px solid #0D18A8;
+  position:relative; cursor:pointer; flex:none; margin:0;
+  background:#fff;
+}
+.pdf-render input[type=radio]{border-radius:50%;}
+.pdf-render input[type=checkbox]{border-radius:3px;}
+.pdf-render input[type=radio]:checked::after{
+  content:''; position:absolute; top:2px; left:2px; width:5.4px; height:5.4px;
+  border-radius:50%; background:#0D18A8;
+}
+.pdf-render input[type=checkbox]:checked::after{
+  content:''; position:absolute; left:2.5px; top:-1px; width:4px; height:8px;
+  border:solid #0D18A8; border-width:0 2px 2px 0; transform:rotate(40deg);
+}
+.pdf-render .otro-text{border:none; border-bottom:1px solid #9AA0AE; background:transparent; font-size:11.5px; font-family:inherit; padding:1px 3px; flex:1; min-width:80px;}
+.pdf-render table.piezas{width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:6px;}
+.pdf-render table.piezas th{background:#DCE3FA; color:#0D18A8; font-size:9.5px; padding:5px 3px; border:1px solid #c4cbe6; text-align:center; font-weight:700;}
+.pdf-render table.piezas td{border:1px solid #d8d8d8; padding:3px 4px; text-align:center;}
+.pdf-render table.piezas td.rowlabel{background:#f5f5f5; font-weight:700; text-align:left; padding-left:6px; width:56px;}
+.pdf-render table.piezas input{width:100%; border:none; background:transparent; text-align:center; font-size:10.5px; font-family:inherit; padding:2px;}
+.pdf-render table.piezas input:focus{outline:none; background:#f0f3ff;}
+.pdf-render .checks-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px 20px; margin-bottom:6px;}
+.pdf-render .checks-grid .opt{font-size:11.5px;}
+.pdf-render .conteo-list{display:grid; grid-template-columns:repeat(2,1fr); gap:7px 28px;}
+.pdf-render .conteo-item{display:flex; align-items:center; gap:8px; font-size:11.5px;}
+.pdf-render .conteo-item .opt{flex:1; min-width:0;}
+.pdf-render .conteo-item .conteo-qty{
+  width:52px; border:none; border-bottom:1px solid #9AA0AE; background:transparent;
+  font-size:11.5px; text-align:center; padding:2px 3px; font-family:inherit; color:#1A1A1A;
+}
+.pdf-render .conteo-item .conteo-qty:focus{outline:none; border-bottom:1.5px solid #0D18A8;}
+.pdf-render .conteo-item .conteo-qty:disabled{opacity:.4; border-bottom-color:#ddd; background:transparent; color:#9aa0ae;}
+.pdf-render .hallazgo-row{display:flex; align-items:center; gap:8px; margin-bottom:7px;}
+.pdf-render .hallazgo-row .opt{min-width:190px;}
+.pdf-render .hallazgo-row label{font-size:11px; white-space:nowrap; color:#444;}
+.pdf-render .hallazgo-row input.cual{flex:1; border:none; border-bottom:1px solid #9AA0AE; background:transparent; font-size:11px; font-family:inherit; padding:2px 4px;}
+.pdf-render .approval-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:10px 0 4px;}
+.pdf-render .approval-col{text-align:center;}
+.pdf-render .approval-col input{width:100%; border:none; border-bottom:1.5px solid #1A1A1A; text-align:center; font-size:11.5px; padding:6px 2px; font-family:inherit;}
+.pdf-render .approval-col .lbl{font-size:12px; font-weight:700; color:#0D18A8; margin-top:6px;}
+.pdf-render /* Cuadrícula usada solo al generar el PDF */
+.photo-grid{display:none; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:260px; gap:12px; max-width:816px;}
+.pdf-render .photo-cell{border:1px solid #ccc; overflow:hidden; border-radius:2px; background:#fff;
+  display:flex; align-items:center; justify-content:center; min-width:0; min-height:0;}
+.pdf-render /* La foto completa siempre es visible: nunca se estira ni se recorta */
+.photo-cell img{display:block; width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain;}
+
+/* Medidas fijas de hoja carta y tipografía propia (independiente del tema de la app) */
+.page.pdf-render{width:816px; min-height:1056px; padding:150px 40px 40px; font-family:'Lab Grotesque', Arial, Helvetica, sans-serif; color:#1A1A1A; color-scheme:light; text-align:left;}
+/* En la app las etiquetas van sin dos puntos; en el formato impreso sí los lleva */
+.pdf-render .field > label:not(.no-colon)::after,
+.pdf-render .opt-head::after,
+.pdf-render .opt-label::after{content:':';}

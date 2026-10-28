@@ -2,6 +2,10 @@
 
 Aplicación web para capturar los formatos de visita a clientes y descargarlos en PDF con el membrete oficial.
 
+- Interfaz tipo app: tarjetas por sección, índice lateral con avance, opciones como chips.
+- **Modo claro / oscuro** (sigue al sistema; el botón de la barra superior lo fija y se recuerda).
+- El **PDF siempre sale en el formato oficial** (membrete, recuadro de clave, pie), sin importar el tema ni el dispositivo.
+
 | Sección | Clave | Formato |
 |---|---|---|
 | Bolsa | VEN-F-11 | Reporte de Visita a Clientes Bolsa |
@@ -13,12 +17,12 @@ Es un sitio estático (HTML + CSS + JS, sin compilación ni dependencias de npm)
 
 ```
 .
-├── index.html              # App: encabezado, pestañas y las dos secciones (formatos)
+├── index.html              # App: barra superior, menú lateral y las dos secciones (formatos)
 ├── css/
-│   ├── app.css             # Estructura de la app (encabezado, pestañas, barra de acciones)
-│   └── forms.css           # Estilos de los formatos (hoja carta), compartidos
+│   ├── app.css             # Interfaz de la app + temas claro/oscuro (variables CSS)
+│   └── pdf.css             # Formato impreso (hoja carta); solo aplica a .pdf-render
 ├── js/
-│   ├── app.js              # Configuración de cada formato + navegación (#bolsa / #funda)
+│   ├── app.js              # Configuración de formatos, navegación, tema, índice, toast y diálogo
 │   ├── form-engine.js      # Motor compartido: fotos, limpiar, conteo y generación del PDF
 │   └── membrete.js         # Membrete embebido (data URI) para el fondo del PDF
 ├── vendor/
@@ -46,10 +50,12 @@ python -m http.server 8000
 
 ## Agregar un formato nuevo
 
-1. En `index.html`: copiar una `<section class="form-section" id="...">` y su pestaña en `<nav class="tabs">`.
+1. En `index.html`: copiar una `<section class="form-section" id="...">` y agregar su enlace en `.form-nav` y `.mobile-tabs`.
 2. En `js/app.js`: agregar su entrada en `FORMATOS` (clave, nombre, revisión, nombre del PDF y orden de bloques de la última página).
 
-Marcado que espera el motor dentro de cada sección: `.page[data-page]`, `[data-block="..."]` en la última página, `[data-role="evidencias-title|photo-input|photo-thumbs|photo-count|status"]` y `[data-action="clear|pdf"]`.
+Marcado que espera el motor dentro de cada sección: `.page[data-page]` (página del formato impreso), `[data-block="..."]` en la última página, `[data-role="evidencias-title|photo-input|photo-thumbs|photo-count"]` y `[data-action="clear|pdf"]`. Cada sección del formato va en una tarjeta `<section class="card" data-ui="card">`; todo lo que tenga `data-ui` se quita al armar el PDF, así la interfaz puede cambiar sin afectar el formato impreso.
+
+En la app las etiquetas van sin dos puntos; `pdf.css` los agrega en el PDF (usa `class="no-colon"` para excluir una).
 
 ## Siguiente paso: Supabase (pendiente)
 

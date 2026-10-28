@@ -1,573 +1,630 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reportes de Visita a Clientes — Zubex</title>
-<link rel="icon" type="image/png" href="assets/img/logo-zubex.png">
-<link rel="stylesheet" href="css/forms.css">
-<link rel="stylesheet" href="css/app.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Reportes de Visita a Clientes — Zubex</title>
+    <meta name="theme-color" content="#0D18A8">
+    <link rel="icon" type="image/png" href="assets/img/logo-zubex.png">
+    <script>
+      // Aplica el tema guardado antes de pintar (evita el parpadeo claro→oscuro)
+      (function(){try{var t=localStorage.getItem('zx-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+    </script>
+    <link rel="stylesheet" href="css/pdf.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
 
-<header class="app-header print-hide">
-  <div class="bar">
-    <img class="logo" src="assets/img/logo-zubex-blanco.png" alt="Zubex">
-    <div class="titles">
-      <h1>Reportes de Visita a Clientes</h1>
-      <div class="sub">Zubex Industrial — Sistema de Gestión de Inocuidad y Calidad</div>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#bolsa" aria-label="Inicio"><img src="assets/img/logo-zubex-blanco.png" alt="Zubex"></a>
+        <div class="brand-text"><strong>Visitas a Clientes</strong><span>Ventas · Sistema de Gestión de Inocuidad y Calidad</span></div>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar tema">
+          <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Navegación">
+        <div class="side-group">
+          <div class="side-label">Formatos</div>
+          <nav class="form-nav">
+            <a class="form-link" href="#bolsa" data-target="bolsa"><span class="form-icon">B</span><span class="form-link-text"><strong>Bolsa</strong><small>VEN-F-11</small></span></a>
+            <a class="form-link" href="#funda" data-target="funda"><span class="form-icon">F</span><span class="form-link-text"><strong>Funda</strong><small>VEN-F-12</small></span></a>
+          </nav>
+        </div>
+        <div class="side-group side-toc">
+          <div class="side-label">Secciones <span class="progress" id="tocProgress"></span></div>
+          <ol class="toc" id="toc"></ol>
+        </div>
+      </aside>
+
+      <main class="content">
+        <nav class="mobile-tabs" aria-label="Formatos">
+          <a class="m-tab" href="#bolsa" data-target="bolsa">Bolsa <small>VEN-F-11</small></a>
+          <a class="m-tab" href="#funda" data-target="funda">Funda <small>VEN-F-12</small></a>
+        </nav>
+
+        <section class="form-section" id="bolsa" hidden>
+          <div class="form-head">
+            <div class="form-head-text">
+              <div class="eyebrow"><span class="chip">VEN-F-11</span><span>Revisión 00 · 03 de julio de 2026</span></div>
+              <h1>Reporte de Visita a Clientes Bolsa</h1>
+            </div>
+            <div class="form-actions">
+              <button class="btn ghost" data-action="clear" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg><span class="lbl">Limpiar</span></button>
+              <button class="btn primary" data-action="pdf" type="button"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span class="spinner" aria-hidden="true"></span><span class="lbl">Descargar PDF</span></button>
+            </div>
+          </div>
+          <form autocomplete="off" novalidate>
+            <!-- Página 1 del formato impreso -->
+            <div class="page" data-page="1">
+
+              <section class="card" data-ui="card" id="bolsa-informacion-general"><div class="section-title">Información General</div>
+                <div class="row">
+                  <div class="field"><label>Fecha</label><input type="date"></div>
+                  <div class="field"><label>Cliente</label><input type="text"></div>
+                  <div class="field"><label>Planta</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Producto</label><input type="text"></div>
+                  <div class="field"><label>Línea</label><input type="text"></div>
+                  <div class="field"><label>Turno</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Responsable en Planta</label><input type="text"></div>
+                  <div class="field"><label>Asesor Técnico</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Asesor Comercial</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Asistentes a Prueba</label><input type="text"></div>
+                </div>
+                <div class="options-line" style="margin-top:6px;">
+                  <span class="opt-label">Motivo de la visita</span>
+                </div>
+                <div class="opt-group" style="margin-bottom:8px;">
+                  <label class="opt"><input name="motivo" type="radio">Visita técnica</label>
+                  <label class="opt"><input name="motivo" type="radio">Prueba de prototipo</label>
+                  <label class="opt"><input name="motivo" type="radio">Auditoria</label>
+                  <label class="opt"><input name="motivo" type="radio">Reclamación</label>
+                  <label class="opt"><input name="motivo" type="radio">Prueba de muestra</label>
+                  <label class="opt"><input name="motivo" type="radio">Otro:<input class="otro-text" type="text"></label>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-informacion-del-producto"><div class="section-title">Información del Producto</div>
+                <div class="row">
+                  <div class="field"><label>Lote(s)</label><input type="text"></div>
+                  <div class="field"><label>ID</label><input type="text"></div>
+                  <div class="field"><label>Cantidad</label><input type="text"></div>
+                  <div class="field"><label>Espesor</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Estructura</label><input type="text"></div>
+                  <div class="field"><label>Ancho</label><input type="text"></div>
+                  <div class="field"><label>Largo</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-condiciones-de-almacenado"><div class="section-title">Condiciones de Almacenado</div>
+                <div class="row">
+                  <div class="field full"><label>Tiempo de almacenado</label><input type="text"></div>
+                </div>
+                <div class="opt-group" style="align-items:center; margin-bottom:4px;">
+                  <span class="opt-head">Adecuadas</span>
+                  <label class="opt"><input name="adecuadas" type="radio">Congelado</label>
+                  <label class="opt"><input name="adecuadas" type="radio">Fresco</label>
+                  <label class="opt"><input name="adecuadas" type="radio">Otro:<input class="otro-text" type="text"></label>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-informacion-producto-carnico"><div class="section-title">Información Producto Cárnico</div>
+                <div class="row">
+                  <div class="field"><label>Corte</label><input type="text"></div>
+                  <div class="field"><label>Inyectado</label><input type="text"></div>
+                  <div class="field"><label>Natural</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Temperatura</label><input type="text"></div>
+                  <div class="field"><label>Peso</label><input type="text"></div>
+                  <div class="field"><label>Vida de anaquel esperada</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-maquina-de-vacio"><div class="section-title">Máquina de Vacío</div>
+                <div class="row">
+                  <div class="field"><label>Marca/Modelo</label><input type="text"></div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo de máquina</span>
+                    <label class="opt"><input name="tipoMaquina" type="radio">Campana Sencilla</label>
+                    <label class="opt"><input name="tipoMaquina" type="radio">Campana Doble</label>
+                    <label class="opt"><input name="tipoMaquina" type="radio">Automática de Banda</label>
+                    <label class="opt"><input name="tipoMaquina" type="radio">Pulpo</label>
+                  </div>
+                </div>
+                <div class="table-wrap" data-ui="table"><table class="piezas" style="margin-top:8px;">
+                    <thead>
+                      <tr><th></th><th>Configuración de la receta</th><th>Parámetro real</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td class="rowlabel" style="width:230px;">Nivel de vacío</td><td><input type="text"></td><td><input type="text"></td></tr>
+                      <tr><td class="rowlabel">Tiempo de vacío</td><td><input type="text"></td><td><input type="text"></td></tr>
+                      <tr><td class="rowlabel">Tiempo de sellado / Temperatura de Sellado</td><td><input type="text"></td><td><input type="text"></td></tr>
+                      <tr><td class="rowlabel">Tiempo de enfriamiento</td><td><input type="text"></td><td><input type="text"></td></tr>
+                      <tr><td class="rowlabel">Tiempo soldadura izquierda</td><td><input type="text"></td><td><input type="text"></td></tr>
+                      <tr><td class="rowlabel">Tiempo soldadura derecha</td><td><input type="text"></td><td><input type="text"></td></tr>
+                    </tbody>
+                </table></div>
+              </section>
+            </div>
+            <!-- Página 2 del formato impreso -->
+            <div class="page" data-page="2">
+
+              <section class="card" data-ui="card" id="bolsa-desempeno-del-sello-del-cliente"><div class="section-title">Desempeño del Sello del Cliente</div>
+                <div class="row">
+                  <div class="field full"><label>Desempeño del sello del cliente</label><input type="text"></div>
+                </div>
+                <div class="opt-group" style="align-items:center; margin-bottom:4px;">
+                  <span class="opt-head">Integridad del sello</span>
+                  <label class="opt"><input name="integridadSello" type="radio">Hermético</label>
+                  <label class="opt"><input name="integridadSello" type="radio">Fuga</label>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Contaminación del sello</label><input type="text"></div>
+                </div>
+                <div class="opt-group" style="align-items:center; margin-bottom:4px;">
+                  <span class="opt-head">Tipo de defecto</span>
+                  <label class="opt"><input name="tipoDefecto" type="checkbox">Canalización</label>
+                  <label class="opt"><input name="tipoDefecto" type="checkbox">Sellado incompleto</label>
+                  <label class="opt"><input name="tipoDefecto" type="checkbox">Quemado</label>
+                  <label class="opt"><input name="tipoDefecto" type="checkbox">Pliegues</label>
+                </div>
+                <div class="opt-group" style="align-items:center; margin-bottom:8px;">
+                  <span class="opt-head">Críticos</span>
+                  <label class="opt"><input name="criticos" type="radio">Sí</label>
+                  <label class="opt"><input name="criticos" type="radio">No</label>
+                </div>
+                <div class="field full" style="margin-bottom:6px;"><label>Observaciones del operador</label></div>
+                <textarea rows="3"></textarea>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-termoencogido"><div class="section-title">Termoencogido</div>
+                <div class="row">
+                  <div class="field"><label>Marca/Modelo</label><input type="text"></div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo de termoencogido</span>
+                    <label class="opt"><input name="tipoTermoencogido" type="radio">Túnel</label>
+                    <label class="opt"><input name="tipoTermoencogido" type="radio">Tanque</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Temperatura programada</label><input type="text"></div>
+                  <div class="field"><label>Temperatura real</label><input type="text"></div>
+                  <div class="field"><label>Tiempo</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-analisis-y-conclusiones"><div class="section-title">Análisis y Conclusiones</div>
+                <div class="row">
+                  <div class="field full"><label>Cumple con la especificación</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Compatibilidad con el proceso actual</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Comparación contra material actual</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Porcentaje de reempaque</label><input type="text"></div>
+                </div>
+                <div class="options-line" style="margin-top:6px;">
+                  <span class="opt-label">Conteo</span>
+                </div>
+                <div class="conteo-list" style="margin-bottom:8px;">
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Pliegues</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Sello contaminado</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Perforación</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Sello incompleto</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Falta de vacío</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Sello de fábrica</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">Mal acomodo</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                  <div class="conteo-item"><label class="opt"><input class="conteo-check" type="checkbox">No se encontró</label><input class="conteo-qty" disabled="" min="0" step="1" type="number" value="0"></div>
+                </div>
+                <div class="field full" style="margin-bottom:6px;"><label>Recomendaciones</label></div>
+                <textarea rows="3"></textarea>
+              </section>
+
+              <section class="card" data-ui="card" id="bolsa-revision-post-congelacion"><div class="section-title">Revisión Post Congelación</div>
+                <div class="row">
+                  <div class="field"><label>Lote(s)</label><input type="text"></div>
+                  <div class="field"><label>Piezas revisadas</label><input type="text"></div>
+                </div>
+                <div class="row" style="align-items:center;">
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Pérdida de vacío</span>
+                    <label class="opt"><input name="perdidaVacio" type="radio">Sí</label>
+                    <label class="opt"><input name="perdidaVacio" type="radio">No</label>
+                  </div>
+                  <div class="field"><label>¿Cuántas?</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Motivo</label><input type="text"></div>
+                </div>
+              </section>
+            </div>
+            <!-- Página 3 del formato impreso -->
+            <div class="page" data-page="3">
+              <div data-block="acciones">
+                <section class="card" data-ui="card" id="bolsa-acciones-inmediatas-en-planta-del-cliente"><div class="section-title">Acciones Inmediatas en Planta del Cliente</div>
+                  <div class="checks-grid" style="margin-bottom:4px;">
+                    <label class="opt"><input type="checkbox">Ajuste de temperatura</label>
+                    <label class="opt"><input type="checkbox">Ajuste de medida</label>
+                    <label class="opt"><input type="checkbox">Cambio de estructura</label>
+                    <label class="opt"><input type="checkbox">Ajuste de tiempo de sellado</label>
+                    <label class="opt"><input type="checkbox">Ajuste de tiempo de vacío</label>
+                  </div>
+                  <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input class="cual" type="text"></div>
+                </section>
+
+                <section class="card" data-ui="card" id="bolsa-acciones-requeridas-para-zubex"><div class="section-title">Acciones Requeridas para Zubex</div>
+                  <div class="checks-grid" style="margin-bottom:4px;">
+                    <label class="opt"><input type="checkbox">Revisar resistencia mecánica</label>
+                    <label class="opt"><input type="checkbox">Revisar fuerza de sellado</label>
+                    <label class="opt"><input type="checkbox">Validar calibre</label>
+                    <label class="opt"><input type="checkbox">Análisis de muestra de retención</label>
+                  </div>
+                  <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input class="cual" type="text"></div>
+                </section>
+              </div>
+              <div data-block="conclusion">
+                <section class="card" data-ui="card" id="bolsa-conclusion"><div class="section-title">Conclusión</div>
+                  <textarea rows="5"></textarea>
+                </section>
+              </div>
+              <div data-block="aprobacion">
+                <section class="card" data-ui="card" id="bolsa-aprobacion"><div class="section-title">Aprobación</div>
+                  <div class="approval-grid">
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Calidad</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Producción</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Desarrollo</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Compras</div></div>
+                  </div>
+                </section>
+              </div>
+
+              <section class="card" data-ui="card" id="bolsa-evidencias-fotograficas"><div class="section-title" data-role="evidencias-title">Evidencias Fotográficas</div>
+                <div class="print-hide">
+                  <label class="photo-attach-box">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10.5" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg>
+                    <span class="drop-title">Toca para adjuntar fotos</span>
+                    <span class="hint">o arrastra las imágenes aquí · puedes seleccionar varias a la vez</span>
+                    <input accept="image/*" data-role="photo-input" multiple type="file">
+                  </label>
+                  <div class="photo-thumbs" data-role="photo-thumbs"></div>
+                  <div class="photo-count" data-role="photo-count"></div>
+                </div>
+              </section>
+            </div>
+          </form>
+        </section>
+
+        <section class="form-section" id="funda" hidden>
+          <div class="form-head">
+            <div class="form-head-text">
+              <div class="eyebrow"><span class="chip">VEN-F-12</span><span>Revisión 00 · 03 de julio de 2026</span></div>
+              <h1>Reporte de Visita a Clientes Funda</h1>
+            </div>
+            <div class="form-actions">
+              <button class="btn ghost" data-action="clear" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg><span class="lbl">Limpiar</span></button>
+              <button class="btn primary" data-action="pdf" type="button"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span class="spinner" aria-hidden="true"></span><span class="lbl">Descargar PDF</span></button>
+            </div>
+          </div>
+          <form autocomplete="off" novalidate>
+            <!-- Página 1 del formato impreso -->
+            <div class="page" data-page="1">
+
+              <section class="card" data-ui="card" id="funda-informacion-general"><div class="section-title">Información General</div>
+                <div class="row">
+                  <div class="field"><label>Fecha</label><input type="date"></div>
+                  <div class="field"><label>Cliente</label><input type="text"></div>
+                  <div class="field"><label>Planta</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Producto</label><input type="text"></div>
+                  <div class="field"><label>Línea</label><input type="text"></div>
+                  <div class="field"><label>Turno</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Responsable en Planta</label><input type="text"></div>
+                  <div class="field"><label>Asesor Técnico</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Asesor Comercial</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Asistentes a Prueba</label><input type="text"></div>
+                </div>
+                <div class="options-line" style="margin-top:6px;">
+                  <span class="opt-label">Motivo de la visita</span>
+                </div>
+                <div class="opt-group" style="margin-bottom:8px;">
+                  <label class="opt"><input name="motivo" type="radio">Visita técnica</label>
+                  <label class="opt"><input name="motivo" type="radio">Prueba de prototipo</label>
+                  <label class="opt"><input name="motivo" type="radio">Auditoría</label>
+                  <label class="opt"><input name="motivo" type="radio">Reclamación</label>
+                  <label class="opt"><input name="motivo" type="radio">Prueba de muestra</label>
+                  <label class="opt"><input name="motivo" type="radio">Otro:<input class="otro-text" type="text"></label>
+                </div>
+                <div class="field full" style="margin-bottom:14px;">
+                  <label style="padding-bottom:6px;">Motivo de la visita</label>
+                </div>
+                <textarea placeholder="Describa el motivo de la visita..." rows="3"></textarea>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-informacion-del-producto"><div class="section-title">Información del Producto</div>
+                <div class="row">
+                  <div class="field"><label>Lote(s)</label><input type="text"></div>
+                  <div class="field"><label>ID</label><input type="text"></div>
+                  <div class="field"><label>Cantidad</label><input type="text"></div>
+                  <div class="field"><label>Espesor</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Estructura</label><input type="text"></div>
+                  <div class="field"><label>Ancho Plano</label><input type="text"></div>
+                  <div class="field"><label>Altura stick</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-equipo-de-embutido"><div class="section-title">Equipo de Embutido</div>
+                <div class="row">
+                  <div class="field"><label>Marca/Modelo</label><input type="text"></div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo</span>
+                    <label class="opt"><input name="tipoEmbutido" type="radio">Manual</label>
+                    <label class="opt"><input name="tipoEmbutido" type="radio">Automático</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Presión de embutido</label><input type="text"></div>
+                  <div class="field"><label>Ajuste</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Porcionado</label><input type="text"></div>
+                  <div class="field"><label>Peso objetivo</label><input type="text"></div>
+                  <div class="field"><label>Longitud</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Velocidad de embutido</label><input type="text"></div>
+                  <div class="field"><label>Ajuste</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Vacío (85-98%)</label><input type="text"></div>
+                  <div class="field"><label>Ajuste</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>No. de tubo</label><input type="text"></div>
+                  <div class="field"><label>Alineación y centrado del tubo</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field full"><label>Condiciones del tubo</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>No. de freno</label><input type="text"></div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Ajuste de freno</span>
+                    <label class="opt"><input name="ajusteFreno" type="radio">Correcto</label>
+                    <label class="opt"><input name="ajusteFreno" type="radio">Muy alto</label>
+                    <label class="opt"><input name="ajusteFreno" type="radio">Muy bajo</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="field"><label><b>Clipadora</b> Marca/Modelo</label><input type="text"></div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo</span>
+                    <label class="opt"><input name="tipoClipadora" type="radio">Manual</label>
+                    <label class="opt"><input name="tipoClipadora" type="radio">Automática</label>
+                    <label class="opt"><input name="tipoClipadora" type="radio">Semiautomática</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Tipo de Grapa</label><input type="text"></div>
+                  <div class="field"><label>Modelo de grapa</label><input type="text"></div>
+                  <div class="field"><label>Presión del clip (segundos)</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-estado-general-de-los-equipos"><div class="section-title">Estado General de los Equipos</div>
+                <div class="row" style="align-items:center;">
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Estado general de los equipos</span>
+                    <label class="opt"><input name="estadoEquipos" type="radio">Bueno</label>
+                    <label class="opt"><input name="estadoEquipos" type="radio">Regular</label>
+                    <label class="opt"><input name="estadoEquipos" type="radio">Deficiente</label>
+                  </div>
+                  <div class="field"><label>¿Cuál?</label><input class="cual" type="text"></div>
+                </div>
+                <div class="field full" style="margin-bottom:6px;"><label>Observaciones</label></div>
+                <textarea rows="3"></textarea>
+              </section>
+            </div>
+            <!-- Página 2 del formato impreso -->
+            <div class="page" data-page="2">
+
+              <section class="card" data-ui="card" id="funda-condiciones-del-producto"><div class="section-title">Condiciones del Producto</div>
+                <div class="table-wrap" data-ui="table"><table class="piezas">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Diámetro PC (mm)</th>
+                        <th>Longitud (cm)</th>
+                        <th>Peso (kg)</th>
+                        <th>Diámetro PT (mm)</th>
+                        <th>Longitud PT (cm)</th>
+                        <th>% de Expansión</th>
+                      </tr>
+                    </thead>
+                    <tbody data-role="piezas-body"></tbody>
+                </table></div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-proceso-de-coccion"><div class="section-title">Proceso de Cocción</div>
+                <div class="row" style="align-items:center;">
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo de funda</span>
+                    <label class="opt"><input name="tipoFunda" type="radio">Molde</label>
+                    <label class="opt"><input name="tipoFunda" type="radio">Bala</label>
+                  </div>
+                  <div class="opt-group" style="align-items:center;">
+                    <span class="opt-head">Tipo de Proceso</span>
+                    <label class="opt"><input name="tipoProceso" type="radio">Cocción en Agua</label>
+                    <label class="opt"><input name="tipoProceso" type="radio">Vapor</label>
+                    <label class="opt"><input name="tipoProceso" type="radio">Horno (Húmedo/Seco)</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="field full" style="margin-bottom:2px;"><label class="no-colon"><b>Perfil térmico</b></label></div>
+                </div>
+                <div class="row thermal-row">
+                  <div class="thermal-stage"><label>Etapa 1:</label><input class="mini" type="text">°C /<input class="mini" type="text">min</div>
+                  <div class="thermal-stage"><label>Etapa 2:</label><input class="mini" type="text">°C /<input class="mini" type="text">min</div>
+                  <div class="thermal-stage"><label>Etapa 3:</label><input class="mini" type="text">°C /<input class="mini" type="text">min</div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>Temperatura interna objetivo</label><input type="text"></div>
+                  <div class="field"><label>Real</label><input type="text"></div>
+                </div>
+                <div class="row">
+                  <div class="field"><label>% Humedad objetivo</label><input type="text"></div>
+                  <div class="field"><label>Tiempo total</label><input type="text"></div>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-proceso-de-enfriamiento"><div class="section-title">Proceso de Enfriamiento</div>
+                <div class="opt-group" style="align-items:center; margin-bottom:4px;">
+                  <span class="opt-head">Método</span>
+                  <label class="opt"><input name="metodoEnfriamiento" type="radio">Ducha</label>
+                  <label class="opt"><input name="metodoEnfriamiento" type="radio">Inmersión</label>
+                  <label class="opt"><input name="metodoEnfriamiento" type="radio">Aire</label>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-resultado-de-la-prueba"><div class="section-title">Resultado de la Prueba</div>
+                <div class="opt-group" style="align-items:center; margin-bottom:4px;">
+                  <span class="opt-head">Resultado de la prueba</span>
+                  <label class="opt"><input name="resultadoPrueba" type="radio">Satisfactorio</label>
+                  <label class="opt"><input name="resultadoPrueba" type="radio">No satisfactorio</label>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-problemas-observados"><div class="section-title">Problemas Observados</div>
+                <div class="checks-grid">
+                  <label class="opt"><input type="checkbox">Reventones</label>
+                  <label class="opt"><input type="checkbox">Funda no desliza</label>
+                  <label class="opt"><input type="checkbox">Embutido a tirones</label>
+                  <label class="opt"><input type="checkbox">Calibre inconsistente</label>
+                  <label class="opt"><input type="checkbox">Encogimiento de funda</label>
+                  <label class="opt"><input type="checkbox">Problemas de clipado</label>
+                  <label class="opt"><input type="checkbox">Alta presión en máquina</label>
+                  <label class="opt"><input type="checkbox">Fantasmeo de Lote/Cad</label>
+                  <label class="opt"><input type="checkbox">Arrugas</label>
+                  <label class="opt"><input type="checkbox">Perforaciones</label>
+                  <label class="opt"><input type="checkbox">Defecto de despinte</label>
+                </div>
+              </section>
+
+              <section class="card" data-ui="card" id="funda-hallazgos-de-material"><div class="section-title">Hallazgos de Material</div>
+                <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de material</label><label>¿Cuál?:</label><input class="cual" type="text"></div>
+                <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de proceso</label><label>¿Cuál?:</label><input class="cual" type="text"></div>
+                <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de producto</label><label>¿Cuál?:</label><input class="cual" type="text"></div>
+                <div class="hallazgo-row"><label class="opt"><input type="checkbox">Combinación de factores</label><label>¿Cuál?:</label><input class="cual" type="text"></div>
+                <div class="field full" style="margin:10px 0 6px;"><label>Observaciones</label></div>
+                <textarea rows="2"></textarea>
+              </section>
+            </div>
+            <!-- Página 3 del formato impreso -->
+            <div class="page" data-page="3">
+              <div data-block="acciones">
+                <section class="card" data-ui="card" id="funda-acciones-inmediatas-en-planta-del-cliente"><div class="section-title">Acciones Inmediatas en Planta del Cliente</div>
+                  <div class="checks-grid" style="margin-bottom:4px;">
+                    <label class="opt"><input type="checkbox">Ajuste de presión</label>
+                    <label class="opt"><input type="checkbox">Ajuste de velocidad</label>
+                    <label class="opt"><input type="checkbox">Cambio de tubo</label>
+                    <label class="opt"><input type="checkbox">Ajuste de temperatura de masa</label>
+                    <label class="opt"><input type="checkbox">Ajuste de freno</label>
+                  </div>
+                  <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input class="cual" type="text"></div>
+                </section>
+
+                <section class="card" data-ui="card" id="funda-acciones-requeridas-para-zubex"><div class="section-title">Acciones Requeridas para Zubex</div>
+                  <div class="checks-grid" style="margin-bottom:4px;">
+                    <label class="opt"><input type="checkbox">Validar calibre</label>
+                    <label class="opt"><input type="checkbox">Revisar resistencia mecánica</label>
+                    <label class="opt"><input type="checkbox">Análisis de muestras de retención</label>
+                    <label class="opt"><input type="checkbox">Ajuste de lubricación</label>
+                  </div>
+                  <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input class="cual" type="text"></div>
+                </section>
+
+                <section class="card" data-ui="card" id="funda-aprobacion"><div class="section-title">Aprobación</div>
+                  <div class="approval-grid">
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Calidad</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Producción</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Desarrollo</div></div>
+                    <div class="approval-col"><input placeholder="Nombre / firma" type="text"><div class="lbl">Compras</div></div>
+                  </div>
+                </section>
+              </div>
+
+              <section class="card" data-ui="card" id="funda-evidencias-fotograficas"><div class="section-title" data-role="evidencias-title">Evidencias Fotográficas</div>
+                <div class="print-hide">
+                  <label class="photo-attach-box">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10.5" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg>
+                    <span class="drop-title">Toca para adjuntar fotos</span>
+                    <span class="hint">o arrastra las imágenes aquí · puedes seleccionar varias a la vez</span>
+                    <input accept="image/*" data-role="photo-input" multiple type="file">
+                  </label>
+                  <div class="photo-thumbs" data-role="photo-thumbs"></div>
+                  <div class="photo-count" data-role="photo-count"></div>
+                </div>
+              </section>
+
+              <div data-block="conclusion">
+                <section class="card" data-ui="card" id="funda-conclusion"><div class="section-title">Conclusión</div>
+                  <textarea rows="5"></textarea>
+                </section>
+              </div>
+
+            </div>
+          </form>
+        </section>
+
+        <footer class="app-footer">Zubex Industrial S.A. de C.V. · Los documentos del SGIC se controlan en red interna; cualquier copia impresa es solo referencia.</footer>
+      </main>
     </div>
-  </div>
-  <nav class="tabs" aria-label="Formatos">
-    <a class="tab" href="#bolsa" data-target="bolsa">Bolsa <span class="clave">VEN-F-11</span></a>
-    <a class="tab" href="#funda" data-target="funda">Funda <span class="clave">VEN-F-12</span></a>
-  </nav>
-</header>
 
-<main>
-  <!-- =============================== VEN-F-11 · REPORTE DE VISITA A CLIENTES BOLSA =============================== -->
-  <section class="form-section" id="bolsa" hidden>
-    <div class="actions print-hide">
-      <div class="doc"><b>VEN-F-11</b> · Reporte de Visita a Clientes Bolsa<span>Revisión 00 · 03 de Julio del 2026</span></div>
-      <div class="buttons">
-        <span class="status" data-role="status" aria-live="polite"></span>
-        <button type="button" class="btn secondary" data-action="clear">Limpiar formulario</button>
-        <button type="button" class="btn" data-action="pdf">Descargar PDF</button>
-      </div>
-    </div>
-    <form autocomplete="off" novalidate>
-      <!-- ============ PÁGINA 1 ============ -->
-      <div class="page" data-page="1">
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-        <div class="section-title">Información General</div>
-        <div class="row">
-          <div class="field"><label>Fecha:</label><input type="date"></div>
-          <div class="field"><label>Cliente:</label><input type="text"></div>
-          <div class="field"><label>Planta:</label><input type="text"></div>
+    <dialog class="modal" id="confirmDialog">
+      <form method="dialog">
+        <h2 data-role="title">¿Confirmar?</h2>
+        <p data-role="message"></p>
+        <div class="modal-actions">
+          <button class="btn ghost" value="cancel" type="submit">Cancelar</button>
+          <button class="btn danger" value="ok" type="submit" data-role="ok">Confirmar</button>
         </div>
-        <div class="row">
-          <div class="field"><label>Producto:</label><input type="text"></div>
-          <div class="field"><label>Línea:</label><input type="text"></div>
-          <div class="field"><label>Turno:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Responsable en Planta:</label><input type="text"></div>
-          <div class="field"><label>Asesor Técnico:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Asesor Comercial:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Asistentes a Prueba:</label><input type="text"></div>
-        </div>
+      </form>
+    </dialog>
 
-        <div class="options-line" style="margin-top:6px;">
-          <span class="opt-label">Motivo de la visita:</span>
-        </div>
-        <div class="opt-group" style="margin-bottom:8px;">
-          <label class="opt"><input type="radio" name="motivo">Visita técnica</label>
-          <label class="opt"><input type="radio" name="motivo">Prueba de prototipo</label>
-          <label class="opt"><input type="radio" name="motivo">Auditoria</label>
-          <label class="opt"><input type="radio" name="motivo">Reclamación</label>
-          <label class="opt"><input type="radio" name="motivo">Prueba de muestra</label>
-          <label class="opt"><input type="radio" name="motivo">Otro:<input type="text" class="otro-text"></label>
-        </div>
-
-        <div class="section-title">Información del Producto</div>
-        <div class="row">
-          <div class="field"><label>Lote(s):</label><input type="text"></div>
-          <div class="field"><label>ID:</label><input type="text"></div>
-          <div class="field"><label>Cantidad:</label><input type="text"></div>
-          <div class="field"><label>Espesor:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Estructura:</label><input type="text"></div>
-          <div class="field"><label>Ancho:</label><input type="text"></div>
-          <div class="field"><label>Largo:</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Condiciones de Almacenado</div>
-        <div class="row">
-          <div class="field full"><label>Tiempo de almacenado:</label><input type="text"></div>
-        </div>
-        <div class="opt-group" style="align-items:center; margin-bottom:4px;">
-          <span class="opt-head">Adecuadas:</span>
-          <label class="opt"><input type="radio" name="adecuadas">Congelado</label>
-          <label class="opt"><input type="radio" name="adecuadas">Fresco</label>
-          <label class="opt"><input type="radio" name="adecuadas">Otro:<input type="text" class="otro-text"></label>
-        </div>
-
-        <div class="section-title">Información Producto Cárnico</div>
-        <div class="row">
-          <div class="field"><label>Corte:</label><input type="text"></div>
-          <div class="field"><label>Inyectado:</label><input type="text"></div>
-          <div class="field"><label>Natural:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Temperatura:</label><input type="text"></div>
-          <div class="field"><label>Peso:</label><input type="text"></div>
-          <div class="field"><label>Vida de anaquel esperada:</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Máquina de Vacío</div>
-        <div class="row">
-          <div class="field"><label>Marca/Modelo:</label><input type="text"></div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo de máquina:</span>
-            <label class="opt"><input type="radio" name="tipoMaquina">Campana Sencilla</label>
-            <label class="opt"><input type="radio" name="tipoMaquina">Campana Doble</label>
-            <label class="opt"><input type="radio" name="tipoMaquina">Automática de Banda</label>
-            <label class="opt"><input type="radio" name="tipoMaquina">Pulpo</label>
-          </div>
-        </div>
-        <table class="piezas" style="margin-top:8px;">
-          <thead>
-            <tr><th></th><th>Configuración de la receta</th><th>Parámetro real</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="rowlabel" style="width:230px;">Nivel de vacío</td><td><input type="text"></td><td><input type="text"></td></tr>
-            <tr><td class="rowlabel">Tiempo de vacío</td><td><input type="text"></td><td><input type="text"></td></tr>
-            <tr><td class="rowlabel">Tiempo de sellado / Temperatura de Sellado</td><td><input type="text"></td><td><input type="text"></td></tr>
-            <tr><td class="rowlabel">Tiempo de enfriamiento</td><td><input type="text"></td><td><input type="text"></td></tr>
-            <tr><td class="rowlabel">Tiempo soldadura izquierda</td><td><input type="text"></td><td><input type="text"></td></tr>
-            <tr><td class="rowlabel">Tiempo soldadura derecha</td><td><input type="text"></td><td><input type="text"></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ============ PÁGINA 2 ============ -->
-      <div class="page" data-page="2">
-
-        <div class="section-title">Desempeño del Sello del Cliente</div>
-        <div class="row">
-          <div class="field full"><label>Desempeño del sello del cliente:</label><input type="text"></div>
-        </div>
-        <div class="opt-group" style="align-items:center; margin-bottom:4px;">
-          <span class="opt-head">Integridad del sello:</span>
-          <label class="opt"><input type="radio" name="integridadSello">Hermético</label>
-          <label class="opt"><input type="radio" name="integridadSello">Fuga</label>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Contaminación del sello:</label><input type="text"></div>
-        </div>
-        <div class="opt-group" style="align-items:center; margin-bottom:4px;">
-          <span class="opt-head">Tipo de defecto:</span>
-          <label class="opt"><input type="checkbox" name="tipoDefecto">Canalización</label>
-          <label class="opt"><input type="checkbox" name="tipoDefecto">Sellado incompleto</label>
-          <label class="opt"><input type="checkbox" name="tipoDefecto">Quemado</label>
-          <label class="opt"><input type="checkbox" name="tipoDefecto">Pliegues</label>
-        </div>
-        <div class="opt-group" style="align-items:center; margin-bottom:8px;">
-          <span class="opt-head">Críticos:</span>
-          <label class="opt"><input type="radio" name="criticos">Sí</label>
-          <label class="opt"><input type="radio" name="criticos">No</label>
-        </div>
-        <div class="field full" style="margin-bottom:6px;"><label>Observaciones del operador:</label></div>
-        <textarea rows="3"></textarea>
-
-        <div class="section-title">Termoencogido</div>
-        <div class="row">
-          <div class="field"><label>Marca/Modelo:</label><input type="text"></div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo de termoencogido:</span>
-            <label class="opt"><input type="radio" name="tipoTermoencogido">Túnel</label>
-            <label class="opt"><input type="radio" name="tipoTermoencogido">Tanque</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Temperatura programada:</label><input type="text"></div>
-          <div class="field"><label>Temperatura real:</label><input type="text"></div>
-          <div class="field"><label>Tiempo:</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Análisis y Conclusiones</div>
-        <div class="row">
-          <div class="field full"><label>Cumple con la especificación:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Compatibilidad con el proceso actual:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Comparación contra material actual:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Porcentaje de reempaque:</label><input type="text"></div>
-        </div>
-        <div class="options-line" style="margin-top:6px;">
-          <span class="opt-label">Conteo:</span>
-        </div>
-        <div class="conteo-list" style="margin-bottom:8px;">
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Pliegues</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Sello contaminado</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Perforación</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Sello incompleto</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Falta de vacío</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Sello de fábrica</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">Mal acomodo</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-          <div class="conteo-item"><label class="opt"><input type="checkbox" class="conteo-check">No se encontró</label><input type="number" class="conteo-qty" min="0" step="1" value="0" disabled></div>
-        </div>
-        <div class="field full" style="margin-bottom:6px;"><label>Recomendaciones:</label></div>
-        <textarea rows="3"></textarea>
-
-        <div class="section-title">Revisión Post Congelación</div>
-        <div class="row">
-          <div class="field"><label>Lote(s):</label><input type="text"></div>
-          <div class="field"><label>Piezas revisadas:</label><input type="text"></div>
-        </div>
-        <div class="row" style="align-items:center;">
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Pérdida de vacío:</span>
-            <label class="opt"><input type="radio" name="perdidaVacio">Sí</label>
-            <label class="opt"><input type="radio" name="perdidaVacio">No</label>
-          </div>
-          <div class="field"><label>¿Cuántas?:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Motivo:</label><input type="text"></div>
-        </div>
-      </div>
-
-      <!-- ============ PÁGINA 3 ============ -->
-      <div class="page" data-page="3">
-
-        <div data-block="acciones">
-        <div class="section-title">Acciones Inmediatas en Planta del Cliente</div>
-        <div class="checks-grid" style="margin-bottom:4px;">
-          <label class="opt"><input type="checkbox">Ajuste de temperatura</label>
-          <label class="opt"><input type="checkbox">Ajuste de medida</label>
-          <label class="opt"><input type="checkbox">Cambio de estructura</label>
-          <label class="opt"><input type="checkbox">Ajuste de tiempo de sellado</label>
-          <label class="opt"><input type="checkbox">Ajuste de tiempo de vacío</label>
-        </div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input type="text" class="cual"></div>
-
-        <div class="section-title">Acciones Requeridas para Zubex</div>
-        <div class="checks-grid" style="margin-bottom:4px;">
-          <label class="opt"><input type="checkbox">Revisar resistencia mecánica</label>
-          <label class="opt"><input type="checkbox">Revisar fuerza de sellado</label>
-          <label class="opt"><input type="checkbox">Validar calibre</label>
-          <label class="opt"><input type="checkbox">Análisis de muestra de retención</label>
-        </div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input type="text" class="cual"></div>
-        </div>
-
-        <div data-block="conclusion">
-        <div class="section-title">Conclusión</div>
-        <textarea rows="5"></textarea>
-        </div>
-
-        <div data-block="aprobacion">
-        <div class="section-title">Aprobación</div>
-        <div class="approval-grid">
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Calidad</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Producción</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Desarrollo</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Compras</div></div>
-        </div>
-        </div>
-
-        <div class="section-title" data-role="evidencias-title">Evidencias Fotográficas</div>
-        <div class="print-hide">
-          <label class="photo-attach-box">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D18A8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10.5" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg>
-            <span>Toca para adjuntar fotos</span>
-            <span class="hint">Puedes seleccionar varias imágenes a la vez</span>
-            <input type="file" data-role="photo-input" accept="image/*" multiple>
-          </label>
-          <div class="photo-thumbs" data-role="photo-thumbs"></div>
-          <div class="photo-count" data-role="photo-count"></div>
-        </div>
-      </div>
-    </form>
-  </section>
-
-  <!-- =============================== VEN-F-12 · REPORTE DE VISITA A CLIENTES FUNDA =============================== -->
-  <section class="form-section" id="funda" hidden>
-    <div class="actions print-hide">
-      <div class="doc"><b>VEN-F-12</b> · Reporte de Visita a Clientes Funda<span>Revisión 00 · 03 de Julio del 2026</span></div>
-      <div class="buttons">
-        <span class="status" data-role="status" aria-live="polite"></span>
-        <button type="button" class="btn secondary" data-action="clear">Limpiar formulario</button>
-        <button type="button" class="btn" data-action="pdf">Descargar PDF</button>
-      </div>
-    </div>
-    <form autocomplete="off" novalidate>
-      <!-- ============ PÁGINA 1 ============ -->
-      <div class="page" data-page="1">
-
-        <div class="section-title">Información General</div>
-        <div class="row">
-          <div class="field"><label>Fecha:</label><input type="date"></div>
-          <div class="field"><label>Cliente:</label><input type="text"></div>
-          <div class="field"><label>Planta:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Producto:</label><input type="text"></div>
-          <div class="field"><label>Línea:</label><input type="text"></div>
-          <div class="field"><label>Turno:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Responsable en Planta:</label><input type="text"></div>
-          <div class="field"><label>Asesor Técnico:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Asesor Comercial:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Asistentes a Prueba:</label><input type="text"></div>
-        </div>
-
-        <div class="options-line" style="margin-top:6px;">
-          <span class="opt-label">Motivo de la visita:</span>
-        </div>
-        <div class="opt-group" style="margin-bottom:8px;">
-          <label class="opt"><input type="radio" name="motivo">Visita técnica</label>
-          <label class="opt"><input type="radio" name="motivo">Prueba de prototipo</label>
-          <label class="opt"><input type="radio" name="motivo">Auditoría</label>
-          <label class="opt"><input type="radio" name="motivo">Reclamación</label>
-          <label class="opt"><input type="radio" name="motivo">Prueba de muestra</label>
-          <label class="opt"><input type="radio" name="motivo">Otro:<input type="text" class="otro-text"></label>
-        </div>
-        <div class="field full" style="margin-bottom:14px;">
-          <label style="padding-bottom:6px;">Motivo de la visita:</label>
-        </div>
-        <textarea rows="3" placeholder="Describa el motivo de la visita..."></textarea>
-
-        <div class="section-title">Información del Producto</div>
-        <div class="row">
-          <div class="field"><label>Lote(s):</label><input type="text"></div>
-          <div class="field"><label>ID:</label><input type="text"></div>
-          <div class="field"><label>Cantidad:</label><input type="text"></div>
-          <div class="field"><label>Espesor:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Estructura:</label><input type="text"></div>
-          <div class="field"><label>Ancho Plano:</label><input type="text"></div>
-          <div class="field"><label>Altura stick:</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Equipo de Embutido</div>
-        <div class="row">
-          <div class="field"><label>Marca/Modelo:</label><input type="text"></div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo:</span>
-            <label class="opt"><input type="radio" name="tipoEmbutido">Manual</label>
-            <label class="opt"><input type="radio" name="tipoEmbutido">Automático</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Presión de embutido:</label><input type="text"></div>
-          <div class="field"><label>Ajuste:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Porcionado:</label><input type="text"></div>
-          <div class="field"><label>Peso objetivo:</label><input type="text"></div>
-          <div class="field"><label>Longitud:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Velocidad de embutido:</label><input type="text"></div>
-          <div class="field"><label>Ajuste:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Vacío (85-98%):</label><input type="text"></div>
-          <div class="field"><label>Ajuste:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>No. de tubo:</label><input type="text"></div>
-          <div class="field"><label>Alineación y centrado del tubo:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field full"><label>Condiciones del tubo:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>No. de freno:</label><input type="text"></div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Ajuste de freno:</span>
-            <label class="opt"><input type="radio" name="ajusteFreno">Correcto</label>
-            <label class="opt"><input type="radio" name="ajusteFreno">Muy alto</label>
-            <label class="opt"><input type="radio" name="ajusteFreno">Muy bajo</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field"><label><b>Clipadora</b> Marca/Modelo:</label><input type="text"></div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo:</span>
-            <label class="opt"><input type="radio" name="tipoClipadora">Manual</label>
-            <label class="opt"><input type="radio" name="tipoClipadora">Automática</label>
-            <label class="opt"><input type="radio" name="tipoClipadora">Semiautomática</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Tipo de Grapa:</label><input type="text"></div>
-          <div class="field"><label>Modelo de grapa:</label><input type="text"></div>
-          <div class="field"><label>Presión del clip (segundos):</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Estado General de los Equipos</div>
-        <div class="row" style="align-items:center;">
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Estado general de los equipos:</span>
-            <label class="opt"><input type="radio" name="estadoEquipos">Bueno</label>
-            <label class="opt"><input type="radio" name="estadoEquipos">Regular</label>
-            <label class="opt"><input type="radio" name="estadoEquipos">Deficiente</label>
-          </div>
-          <div class="field"><label>¿Cuál?:</label><input type="text" class="cual"></div>
-        </div>
-        <div class="field full" style="margin-bottom:6px;"><label>Observaciones:</label></div>
-        <textarea rows="3"></textarea>
-      </div>
-
-      <!-- ============ PÁGINA 2 ============ -->
-      <div class="page" data-page="2">
-
-        <div class="section-title">Condiciones del Producto</div>
-        <table class="piezas">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Diámetro PC (mm)</th>
-              <th>Longitud (cm)</th>
-              <th>Peso (kg)</th>
-              <th>Diámetro PT (mm)</th>
-              <th>Longitud PT (cm)</th>
-              <th>% de Expansión</th>
-            </tr>
-          </thead>
-          <tbody data-role="piezas-body"></tbody>
-        </table>
-
-        <div class="section-title">Proceso de Cocción</div>
-        <div class="row" style="align-items:center;">
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo de funda:</span>
-            <label class="opt"><input type="radio" name="tipoFunda">Molde</label>
-            <label class="opt"><input type="radio" name="tipoFunda">Bala</label>
-          </div>
-          <div class="opt-group" style="align-items:center;">
-            <span class="opt-head">Tipo de Proceso:</span>
-            <label class="opt"><input type="radio" name="tipoProceso">Cocción en Agua</label>
-            <label class="opt"><input type="radio" name="tipoProceso">Vapor</label>
-            <label class="opt"><input type="radio" name="tipoProceso">Horno (Húmedo/Seco)</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field full" style="margin-bottom:2px;"><label><b>Perfil térmico</b></label></div>
-        </div>
-        <div class="row thermal-row">
-          <div class="thermal-stage"><label>Etapa 1:</label><input type="text" class="mini">°C&nbsp;/<input type="text" class="mini">min</div>
-          <div class="thermal-stage"><label>Etapa 2:</label><input type="text" class="mini">°C&nbsp;/<input type="text" class="mini">min</div>
-          <div class="thermal-stage"><label>Etapa 3:</label><input type="text" class="mini">°C&nbsp;/<input type="text" class="mini">min</div>
-        </div>
-        <div class="row">
-          <div class="field"><label>Temperatura interna objetivo:</label><input type="text"></div>
-          <div class="field"><label>Real:</label><input type="text"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label>% Humedad objetivo:</label><input type="text"></div>
-          <div class="field"><label>Tiempo total:</label><input type="text"></div>
-        </div>
-
-        <div class="section-title">Proceso de Enfriamiento</div>
-        <div class="opt-group" style="align-items:center; margin-bottom:4px;">
-          <span class="opt-head">Método:</span>
-          <label class="opt"><input type="radio" name="metodoEnfriamiento">Ducha</label>
-          <label class="opt"><input type="radio" name="metodoEnfriamiento">Inmersión</label>
-          <label class="opt"><input type="radio" name="metodoEnfriamiento">Aire</label>
-        </div>
-
-        <div class="section-title">Resultado de la Prueba</div>
-        <div class="opt-group" style="align-items:center; margin-bottom:4px;">
-          <span class="opt-head">Resultado de la prueba:</span>
-          <label class="opt"><input type="radio" name="resultadoPrueba">Satisfactorio</label>
-          <label class="opt"><input type="radio" name="resultadoPrueba">No satisfactorio</label>
-        </div>
-
-        <div class="section-title">Problemas Observados</div>
-        <div class="checks-grid">
-          <label class="opt"><input type="checkbox">Reventones</label>
-          <label class="opt"><input type="checkbox">Funda no desliza</label>
-          <label class="opt"><input type="checkbox">Embutido a tirones</label>
-          <label class="opt"><input type="checkbox">Calibre inconsistente</label>
-          <label class="opt"><input type="checkbox">Encogimiento de funda</label>
-          <label class="opt"><input type="checkbox">Problemas de clipado</label>
-          <label class="opt"><input type="checkbox">Alta presión en máquina</label>
-          <label class="opt"><input type="checkbox">Fantasmeo de Lote/Cad</label>
-          <label class="opt"><input type="checkbox">Arrugas</label>
-          <label class="opt"><input type="checkbox">Perforaciones</label>
-          <label class="opt"><input type="checkbox">Defecto de despinte</label>
-        </div>
-
-        <div class="section-title">Hallazgos de Material</div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de material</label><label>¿Cuál?:</label><input type="text" class="cual"></div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de proceso</label><label>¿Cuál?:</label><input type="text" class="cual"></div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Problema de producto</label><label>¿Cuál?:</label><input type="text" class="cual"></div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Combinación de factores</label><label>¿Cuál?:</label><input type="text" class="cual"></div>
-
-        <div class="field full" style="margin:10px 0 6px;"><label>Observaciones:</label></div>
-        <textarea rows="2"></textarea>
-      </div>
-
-      <!-- ============ PÁGINA 3 ============ -->
-      <div class="page" data-page="3">
-
-        <div data-block="acciones">
-        <div class="section-title">Acciones Inmediatas en Planta del Cliente</div>
-        <div class="checks-grid" style="margin-bottom:4px;">
-          <label class="opt"><input type="checkbox">Ajuste de presión</label>
-          <label class="opt"><input type="checkbox">Ajuste de velocidad</label>
-          <label class="opt"><input type="checkbox">Cambio de tubo</label>
-          <label class="opt"><input type="checkbox">Ajuste de temperatura de masa</label>
-          <label class="opt"><input type="checkbox">Ajuste de freno</label>
-        </div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input type="text" class="cual"></div>
-
-        <div class="section-title">Acciones Requeridas para Zubex</div>
-        <div class="checks-grid" style="margin-bottom:4px;">
-          <label class="opt"><input type="checkbox">Validar calibre</label>
-          <label class="opt"><input type="checkbox">Revisar resistencia mecánica</label>
-          <label class="opt"><input type="checkbox">Análisis de muestras de retención</label>
-          <label class="opt"><input type="checkbox">Ajuste de lubricación</label>
-        </div>
-        <div class="hallazgo-row"><label class="opt"><input type="checkbox">Otro:</label><input type="text" class="cual"></div>
-
-        <div class="section-title">Aprobación</div>
-        <div class="approval-grid">
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Calidad</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Producción</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Desarrollo</div></div>
-          <div class="approval-col"><input type="text" placeholder="Nombre / firma"><div class="lbl">Compras</div></div>
-        </div>
-        </div>
-
-        <div class="section-title" data-role="evidencias-title">Evidencias Fotográficas</div>
-        <div class="print-hide">
-          <label class="photo-attach-box">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D18A8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10.5" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg>
-            <span>Toca para adjuntar fotos</span>
-            <span class="hint">Puedes seleccionar varias imágenes a la vez</span>
-            <input type="file" data-role="photo-input" accept="image/*" multiple>
-          </label>
-          <div class="photo-thumbs" data-role="photo-thumbs"></div>
-          <div class="photo-count" data-role="photo-count"></div>
-        </div>
-
-        <div data-block="conclusion">
-        <div class="section-title">Conclusión</div>
-        <textarea rows="5"></textarea>
-        </div>
-      </div>
-    </form>
-  </section>
-</main>
-
-<footer class="app-footer print-hide">Zubex Industrial S.A. de C.V. · Ventas — Reportes de Visita a Clientes</footer>
-
-<!-- Librerías (copias locales, sin CDN) -->
-<script src="vendor/html2canvas.min.js"></script>
-<script src="vendor/jspdf.umd.min.js"></script>
-<!-- App -->
-<script src="js/membrete.js"></script>
-<script src="js/form-engine.js"></script>
-<script src="js/app.js"></script>
-</body>
+    <!-- Librerías (copias locales, sin CDN) -->
+    <script src="vendor/html2canvas.min.js"></script>
+    <script src="vendor/jspdf.umd.min.js"></script>
+    <!-- App -->
+    <script src="js/membrete.js"></script>
+    <script src="js/form-engine.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
